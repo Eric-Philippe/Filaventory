@@ -21,11 +21,11 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: electron/package-lock.json
+          cache-dependency-path: studio-client/package-lock.json
 
       - name: Install dependencies
         run: npm ci
-        working-directory: electron
+        working-directory: studio-client
 
       - name: Import signing certificate
         env:
@@ -43,7 +43,7 @@ jobs:
 
       - name: Vite build
         run: npm run build
-        working-directory: electron
+        working-directory: studio-client
 
       - name: Package (macOS — x64 + arm64)
         env:
@@ -53,15 +53,15 @@ jobs:
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: npx electron-builder --mac --x64 --arm64
-        working-directory: electron
+        working-directory: studio-client
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
           name: mac-builds
           path: |
-            electron/dist/*.dmg
-            electron/dist/*.zip
+            studio-client/dist/*.dmg
+            studio-client/dist/*.zip
           retention-days: 30
 
   # ── Windows ────────────────────────────────────────────────────────────────
@@ -77,28 +77,28 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: electron/package-lock.json
+          cache-dependency-path: studio-client/package-lock.json
 
       - name: Install dependencies
         run: npm ci
-        working-directory: electron
+        working-directory: studio-client
 
       - name: Vite build
         run: npm run build
-        working-directory: electron
+        working-directory: studio-client
 
       - name: Package (Windows — x64)
         env:
           WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
           WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
         run: npx electron-builder --win --x64
-        working-directory: electron
+        working-directory: studio-client
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: win-builds
-          path: electron/dist/*.exe
+          path: studio-client/dist/*.exe
           retention-days: 30
 
   # ── Linux ──────────────────────────────────────────────────────────────────
@@ -114,25 +114,25 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: electron/package-lock.json
+          cache-dependency-path: studio-client/package-lock.json
 
       - name: Install dependencies
         run: npm ci
-        working-directory: electron
+        working-directory: studio-client
 
       - name: Vite build
         run: npm run build
-        working-directory: electron
+        working-directory: studio-client
 
       - name: Package (Linux — x64)
         run: npx electron-builder --linux --x64
-        working-directory: electron
+        working-directory: studio-client
 
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
           name: linux-builds
           path: |
-            electron/dist/*.AppImage
-            electron/dist/*.deb
+            studio-client/dist/*.AppImage
+            studio-client/dist/*.deb
           retention-days: 30
