@@ -3,6 +3,11 @@
   "productName": "Filaventory Studio",
   "version": "0.1.0",
   "description": "3D printing filament inventory manager",
+  "author": {
+    "name": "Eric Philippe",
+    "email": "ericphlpp@gmail.com"
+  },
+  "homepage": "https://github.com/Eric-Philippe/Filaventory",
   "main": "out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev",

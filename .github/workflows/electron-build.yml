@@ -71,8 +71,7 @@ jobs:
 
       - name: Package (Windows — x64)
         env:
-          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
-          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
         run: npx electron-builder --win --x64
         working-directory: studio-client
 
