@@ -27,31 +27,13 @@ jobs:
         run: npm ci
         working-directory: studio-client
 
-      - name: Import signing certificate
-        env:
-          MAC_CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
-          MAC_CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
-        run: |
-          KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
-          echo "$MAC_CSC_LINK" | base64 --decode > $RUNNER_TEMP/cert.p12
-          security create-keychain -p "" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "" $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-          security import $RUNNER_TEMP/cert.p12 -k $KEYCHAIN_PATH -P "$MAC_CSC_KEY_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security -A
-          security set-key-partition-list -S apple-tool:,apple: -s -k "" $KEYCHAIN_PATH
-
       - name: Vite build
         run: npm run build
         working-directory: studio-client
 
       - name: Package (macOS — x64 + arm64)
         env:
-          CSC_KEYCHAIN: ${{ runner.temp }}/build.keychain
-          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
         run: npx electron-builder --mac --x64 --arm64
         working-directory: studio-client
 
