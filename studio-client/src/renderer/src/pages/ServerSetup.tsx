@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
-import { setServerUrl } from '../api/client'
-import logoUrl from '../assets/logo-nobackground.png'
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { setServerUrl } from "../api/client";
+import logoUrl from "../assets/logo-nobackground.png";
 
 export default function ServerSetup(): React.ReactElement {
-  const [url, setUrl] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [url, setUrl] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError("");
 
-    let normalized = url.trim().replace(/\/$/, '')
-    if (!normalized) { setError('Enter a server URL'); return }
-    if (!/^https?:\/\//i.test(normalized)) normalized = `http://${normalized}`
-
-    setLoading(true)
-    try {
-      const res = await fetch(`${normalized}/api/health`, { signal: AbortSignal.timeout(5000) })
-      if (!res.ok) throw new Error(`Server responded with ${res.status}`)
-      setServerUrl(normalized)
-      navigate('/login', { replace: true })
-    } catch (err) {
-      setError(err instanceof Error ? `Cannot reach server: ${err.message}` : 'Cannot reach server')
-    } finally {
-      setLoading(false)
+    let normalized = url.trim().replace(/\/$/, "");
+    if (!normalized) {
+      setError("Enter a server URL");
+      return;
     }
-  }
+    if (!/^https?:\/\//i.test(normalized)) normalized = `http://${normalized}`;
+
+    setLoading(true);
+    try {
+      console.log(`Checking server health at ${normalized}/api/health...`);
+      const res = await fetch(`${normalized}/api/health`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+      setServerUrl(normalized);
+      navigate("/login", { replace: true });
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? `Cannot reach server: ${err.message}`
+          : "Cannot reach server",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-deep-purple flex items-center justify-center p-4">
@@ -50,7 +60,11 @@ export default function ServerSetup(): React.ReactElement {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1, duration: 0.4 }}
           >
-            <img src={logoUrl} alt="Filaventory Studio" className="w-24 h-24 mx-auto mb-3 drop-shadow-lg" />
+            <img
+              src={logoUrl}
+              alt="Filaventory Studio"
+              className="w-24 h-24 mx-auto mb-3 drop-shadow-lg"
+            />
             <h1 className="text-3xl font-bold tracking-widest text-white uppercase">
               Filaventory Studio
             </h1>
@@ -66,7 +80,9 @@ export default function ServerSetup(): React.ReactElement {
           transition={{ delay: 0.08, duration: 0.4 }}
           className="glass rounded-2xl p-8"
         >
-          <h2 className="text-lg font-semibold text-white mb-1">Connect to server</h2>
+          <h2 className="text-lg font-semibold text-white mb-1">
+            Connect to server
+          </h2>
           <p className="text-white/40 text-sm mb-6">
             Enter the address of your Filaventory server.
           </p>
@@ -76,7 +92,7 @@ export default function ServerSetup(): React.ReactElement {
               <motion.div
                 key="error"
                 initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-                animate={{ opacity: 1, height: 'auto', marginBottom: 16 }}
+                animate={{ opacity: 1, height: "auto", marginBottom: 16 }}
                 exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
@@ -115,18 +131,22 @@ export default function ServerSetup(): React.ReactElement {
                 <span className="flex items-center justify-center gap-2">
                   <motion.span
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                     className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
                   />
                   Connecting...
                 </span>
               ) : (
-                'Connect'
+                "Connect"
               )}
             </motion.button>
           </form>
         </motion.div>
       </motion.div>
     </div>
-  )
+  );
 }

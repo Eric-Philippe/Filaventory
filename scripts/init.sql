@@ -29,7 +29,7 @@ CREATE TABLE brand (
    website VARCHAR(255),
    empty_spool_weight_grams NUMERIC(10, 2),
    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   FOREIGN KEY(id_origin) REFERENCES "user"(id_user) ON DELETE CASCADE,
+   FOREIGN KEY(id_origin) REFERENCES "user"(id_user) ON DELETE CASCADE
 );
 
 -- Filament product catalog
@@ -55,8 +55,8 @@ CREATE TABLE filament (
    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
    FOREIGN KEY(id_brand) REFERENCES brand(id_brand) ON DELETE RESTRICT,
-   FOREIGN KEY(id_origin) REFERENCES "user"(id_user) ON DELETE CASCADE
-   CHECK (color_hex ~ '^#[0-9A-Fa-f]{6}$'),
+   FOREIGN KEY(id_origin) REFERENCES "user"(id_user) ON DELETE CASCADE,
+   CHECK (color_hex ~ '^#[0-9A-Fa-f]{6}$')
 );
 
 -- User preferences for specific filaments
