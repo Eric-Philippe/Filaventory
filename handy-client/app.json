@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Filaventory",
+    "slug": "filaventory-handy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "filaventory",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#110c28"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.filaventory.handy"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#252150"
+      },
+      "package": "com.filaventory.handy"
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

@@ -1,0 +1,1824 @@
+basePath: /
+definitions:
+  handlers.AccountUpdateRequest:
+    properties:
+      currency:
+        example: EUR
+        type: string
+      email:
+        example: alice@example.com
+        type: string
+      username:
+        example: alice
+        type: string
+    type: object
+  handlers.AuthResponse:
+    properties:
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+      user: {}
+    type: object
+  handlers.BrandRequest:
+    properties:
+      empty_spool_weight_grams:
+        example: 250
+        type: number
+      name:
+        example: Bambu Lab
+        type: string
+      website:
+        example: https://bambulab.com
+        type: string
+    type: object
+  handlers.FilamentRequest:
+    properties:
+      bed_temp_max:
+        example: 65
+        type: integer
+      bed_temp_min:
+        example: 60
+        type: integer
+      color_hex:
+        example: '#1a1a2e'
+        type: string
+      density:
+        example: 1.24
+        type: number
+      dry_temp:
+        example: 50
+        type: integer
+      dry_time:
+        example: 6
+        type: integer
+      filled_type:
+        example: Silk
+        type: string
+      id_brand:
+        example: uuid-here
+        type: string
+      image_url:
+        type: string
+      material_type:
+        example: PLA
+        type: string
+      nozzle_temp_max:
+        example: 220
+        type: integer
+      nozzle_temp_min:
+        example: 200
+        type: integer
+      title:
+        example: Galaxy Black PLA
+        type: string
+      weight_grams:
+        example: 1000
+        type: integer
+    type: object
+  handlers.LinkFilamentRequest:
+    properties:
+      id_spool:
+        example: 5
+        type: integer
+      id_wish:
+        example: 7
+        type: integer
+    type: object
+  handlers.LoginRequest:
+    properties:
+      email:
+        example: alice@example.com
+        type: string
+      password:
+        example: s3cr3t!
+        type: string
+    type: object
+  handlers.PasswordUpdateRequest:
+    properties:
+      current_password:
+        example: old_pass
+        type: string
+      new_password:
+        example: new_pass
+        type: string
+    type: object
+  handlers.PreferenceRequest:
+    properties:
+      bed_temp_override:
+        example: 60
+        type: integer
+      ironing_flow:
+        example: 15
+        type: integer
+      ironing_speed:
+        example: 30
+        type: integer
+      notes:
+        example: prints better at 220
+        type: string
+      nozzle_temp_override:
+        example: 215
+        type: integer
+    type: object
+  handlers.ProjectCreateRequest:
+    properties:
+      comment:
+        type: string
+      model_url:
+        example: https://makerworld.com/...
+        type: string
+      priority:
+        example: 0
+        type: integer
+      tag_ids:
+        items:
+          type: integer
+        type: array
+      target_person:
+        example: Bob
+        type: string
+      title:
+        example: Benchy
+        type: string
+    type: object
+  handlers.ProjectUpdateRequest:
+    properties:
+      comment:
+        type: string
+      model_url:
+        example: https://makerworld.com/...
+        type: string
+      priority:
+        example: 0
+        type: integer
+      tag_ids:
+        items:
+          type: integer
+        type: array
+      target_person:
+        example: Bob
+        type: string
+      title:
+        example: Benchy
+        type: string
+    type: object
+  handlers.RFIDScanRequest:
+    properties:
+      code:
+        example: TAG-ABC123
+        type: string
+      origin:
+        example: tigertag
+        type: string
+    type: object
+  handlers.RFIDScanResponse:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+      origin:
+        type: string
+      status:
+        type: string
+      user_id:
+        type: string
+    type: object
+  handlers.RackAssignRequest:
+    properties:
+      id_rack:
+        example: 2
+        type: integer
+    type: object
+  handlers.RackRequest:
+    properties:
+      description:
+        example: Left side
+        type: string
+      max_capacity:
+        example: 12
+        type: integer
+      name:
+        example: Top shelf
+        type: string
+    type: object
+  handlers.RegisterRequest:
+    properties:
+      email:
+        example: alice@example.com
+        type: string
+      password:
+        example: s3cr3t!
+        type: string
+      username:
+        example: alice
+        type: string
+    type: object
+  handlers.ReorderRequest:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    type: object
+  handlers.SpoolCreateRequest:
+    properties:
+      id_filament:
+        example: uuid-here
+        type: string
+      id_rack:
+        example: 3
+        type: integer
+      is_dry:
+        example: false
+        type: boolean
+      is_spooled:
+        example: true
+        type: boolean
+      notes:
+        example: opened 2024-01
+        type: string
+      weight_remaining_grams:
+        example: 850
+        type: number
+    type: object
+  handlers.SpoolUpdateRequest:
+    properties:
+      id_rack:
+        type: integer
+      is_dry:
+        example: false
+        type: boolean
+      is_spooled:
+        example: true
+        type: boolean
+      notes:
+        type: string
+      weight_remaining_grams:
+        example: 650
+        type: number
+    type: object
+  handlers.TagRequest:
+    properties:
+      color:
+        example: '#FF5733'
+        type: string
+      icon:
+        type: string
+      name:
+        example: Urgent
+        type: string
+    type: object
+  handlers.WeightUpdateRequest:
+    properties:
+      weight_remaining_grams:
+        example: 520
+        type: number
+    type: object
+  handlers.WishlistCreateRequest:
+    properties:
+      comment:
+        example: wait for sale
+        type: string
+      desired_price:
+        example: 24.99
+        type: number
+      id_filament:
+        example: uuid-here
+        type: string
+      priority:
+        example: 1
+        type: integer
+      purchase_url:
+        example: https://store.com/item
+        type: string
+      quantity_spools:
+        example: 2
+        type: number
+    type: object
+  handlers.WishlistUpdateRequest:
+    properties:
+      comment:
+        type: string
+      desired_price:
+        type: number
+      priority:
+        example: 0
+        type: integer
+      purchase_url:
+        type: string
+      quantity_spools:
+        example: 1
+        type: number
+    type: object
+  models.Brand:
+    properties:
+      created_at:
+        type: string
+      empty_spool_weight_grams:
+        type: number
+      id_brand:
+        type: string
+      id_origin:
+        type: string
+      name:
+        type: string
+      website:
+        type: string
+    type: object
+  models.Filament:
+    properties:
+      bed_temp_max:
+        type: integer
+      bed_temp_min:
+        type: integer
+      brand:
+        $ref: '#/definitions/models.Brand'
+      color_hex:
+        type: string
+      color_info:
+        type: object
+      created_at:
+        type: string
+      density:
+        type: number
+      dry_temp:
+        type: integer
+      dry_time:
+        type: integer
+      filled_type:
+        type: string
+      id_brand:
+        type: string
+      id_filament:
+        type: string
+      id_origin:
+        type: string
+      image_url:
+        type: string
+      material_type:
+        type: string
+      nozzle_temp_max:
+        type: integer
+      nozzle_temp_min:
+        type: integer
+      product_id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      weight_grams:
+        type: integer
+    type: object
+  models.Preference:
+    properties:
+      bed_temp_override:
+        type: integer
+      id_filament:
+        type: string
+      id_user:
+        type: string
+      ironing_flow:
+        type: integer
+      ironing_speed:
+        type: integer
+      notes:
+        type: string
+      nozzle_temp_override:
+        type: integer
+    type: object
+  models.Project:
+    properties:
+      comment:
+        type: string
+      created_at:
+        type: string
+      filaments:
+        items:
+          $ref: '#/definitions/models.ProjectFilamentLink'
+        type: array
+      id_project:
+        type: integer
+      id_user:
+        type: string
+      model_url:
+        type: string
+      priority:
+        type: integer
+      tags:
+        items:
+          $ref: '#/definitions/models.Tag'
+        type: array
+      target_person:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.ProjectFilamentLink:
+    properties:
+      id_link:
+        type: integer
+      id_project:
+        type: integer
+      id_spool:
+        type: integer
+      id_wish:
+        type: integer
+      spool:
+        $ref: '#/definitions/models.Spool'
+      wish:
+        $ref: '#/definitions/models.WishlistItem'
+    type: object
+  models.Rack:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id_rack:
+        type: integer
+      id_user:
+        type: string
+      max_capacity:
+        type: integer
+      name:
+        type: string
+      spool_count:
+        type: integer
+    type: object
+  models.RackRef:
+    properties:
+      id_rack:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.Spool:
+    properties:
+      acquired_at:
+        type: string
+      filament:
+        $ref: '#/definitions/models.Filament'
+      id_filament:
+        type: string
+      id_rack:
+        type: integer
+      id_spool:
+        type: integer
+      id_user:
+        type: string
+      is_dry:
+        type: boolean
+      is_spooled:
+        type: boolean
+      notes:
+        type: string
+      rack:
+        $ref: '#/definitions/models.RackRef'
+      weight_remaining_grams:
+        type: number
+    type: object
+  models.Tag:
+    properties:
+      color:
+        type: string
+      created_at:
+        type: string
+      icon:
+        type: string
+      id_tag:
+        type: integer
+      id_user:
+        type: string
+      name:
+        type: string
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      currency:
+        type: string
+      email:
+        type: string
+      id_user:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  models.WishlistItem:
+    properties:
+      added_at:
+        type: string
+      comment:
+        type: string
+      desired_price:
+        type: number
+      filament:
+        $ref: '#/definitions/models.Filament'
+      id_filament:
+        type: string
+      id_user:
+        type: string
+      id_wish:
+        type: integer
+      priority:
+        type: integer
+      purchase_url:
+        type: string
+      quantity_spools:
+        type: number
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Filament inventory management for 3D printing enthusiasts.
+  title: Filaventory API
+  version: "1.0"
+paths:
+  /api/account:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get current user account
+      tags:
+      - account
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Fields to update
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AccountUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "409":
+          description: email or username already in use
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update account details
+      tags:
+      - account
+  /api/account/password:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Current and new password
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.PasswordUpdateRequest'
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: incorrect current password
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Change password
+      tags:
+      - account
+  /api/auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.AuthResponse'
+        "401":
+          description: invalid credentials
+          schema:
+            type: string
+      summary: Login
+      tags:
+      - auth
+  /api/auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Registration details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.AuthResponse'
+        "400":
+          description: validation error
+          schema:
+            type: string
+        "409":
+          description: email or username already exists
+          schema:
+            type: string
+      summary: Register a new user
+      tags:
+      - auth
+  /api/brands:
+    get:
+      parameters:
+      - description: Search query
+        in: query
+        name: q
+        type: string
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Per page
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            properties:
+              data:
+                items:
+                  $ref: '#/definitions/models.Brand'
+                type: array
+              page:
+                type: integer
+              per_page:
+                type: integer
+              total:
+                type: integer
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List brands
+      tags:
+      - brands
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Brand data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.BrandRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Brand'
+        "400":
+          description: name is required
+          schema:
+            type: string
+        "409":
+          description: brand already exists
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a brand
+      tags:
+      - brands
+  /api/brands/{id}:
+    delete:
+      parameters:
+      - description: Brand UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete a brand
+      tags:
+      - brands
+    get:
+      parameters:
+      - description: Brand UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Brand'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get a brand
+      tags:
+      - brands
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Brand UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Brand data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.BrandRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Brand'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update a brand
+      tags:
+      - brands
+  /api/filaments:
+    get:
+      parameters:
+      - description: Full-text search (brand, title, material)
+        in: query
+        name: q
+        type: string
+      - collectionFormat: csv
+        description: Filter by material types
+        in: query
+        items:
+          type: string
+        name: materials
+        type: array
+      - description: Filter by brand UUID
+        in: query
+        name: brand_id
+        type: string
+      - description: 'Sort field: title|brand|material|nozzle|bed|weight'
+        in: query
+        name: sort_by
+        type: string
+      - description: 'Sort direction: asc|desc'
+        in: query
+        name: sort_dir
+        type: string
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Per page
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            properties:
+              data:
+                items:
+                  $ref: '#/definitions/models.Filament'
+                type: array
+              page:
+                type: integer
+              per_page:
+                type: integer
+              total:
+                type: integer
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List filaments
+      tags:
+      - filaments
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Filament data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.FilamentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Filament'
+        "400":
+          description: validation error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a filament
+      tags:
+      - filaments
+  /api/filaments/{id}:
+    delete:
+      parameters:
+      - description: Filament UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found
+          schema:
+            type: string
+        "409":
+          description: filament is in use by a spool
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete a filament
+      tags:
+      - filaments
+    get:
+      parameters:
+      - description: Filament UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Filament'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get a filament
+      tags:
+      - filaments
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Filament UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Filament data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.FilamentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Filament'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update a filament
+      tags:
+      - filaments
+  /api/filaments/materials:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List distinct material types
+      tags:
+      - filaments
+  /api/health:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            properties:
+              status:
+                type: string
+            type: object
+      summary: Health check
+      tags:
+      - system
+  /api/preferences/{filament_id}:
+    delete:
+      parameters:
+      - description: Filament UUID
+        in: path
+        name: filament_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete filament preference
+      tags:
+      - preferences
+    get:
+      parameters:
+      - description: Filament UUID
+        in: path
+        name: filament_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Preference'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get filament preference
+      tags:
+      - preferences
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Filament UUID
+        in: path
+        name: filament_id
+        required: true
+        type: string
+      - description: Preference data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.PreferenceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Preference'
+      security:
+      - BearerAuth: []
+      summary: Create or update filament preference
+      tags:
+      - preferences
+  /api/projects:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Project'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List projects (print queue)
+      tags:
+      - projects
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Project data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.ProjectCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Project'
+        "400":
+          description: title is required
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a project
+      tags:
+      - projects
+  /api/projects/{id}:
+    delete:
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete a project
+      tags:
+      - projects
+    get:
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Project'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get a project
+      tags:
+      - projects
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Project data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.ProjectUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Project'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update a project
+      tags:
+      - projects
+  /api/projects/{id}/filaments:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Spool or wish ID
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LinkFilamentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            properties:
+              id_link:
+                type: integer
+            type: object
+        "400":
+          description: id_spool or id_wish is required
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Link a spool or wishlist item to a project
+      tags:
+      - projects
+  /api/projects/{id}/filaments/{link_id}:
+    delete:
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Link ID
+        in: path
+        name: link_id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Remove a filament link from a project
+      tags:
+      - projects
+  /api/projects/reorder:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Ordered project IDs
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.ReorderRequest'
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Reorder projects by priority
+      tags:
+      - projects
+  /api/racks:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Rack'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List racks
+      tags:
+      - racks
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Rack data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RackRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Rack'
+        "400":
+          description: name is required
+          schema:
+            type: string
+        "409":
+          description: rack name already exists
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a rack
+      tags:
+      - racks
+  /api/racks/{id}:
+    delete:
+      parameters:
+      - description: Rack ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete a rack
+      tags:
+      - racks
+    get:
+      parameters:
+      - description: Rack ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Rack'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get a rack
+      tags:
+      - racks
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Rack ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Rack data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Rack'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update a rack
+      tags:
+      - racks
+  /api/rfid/scan:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Scan payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RFIDScanRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.RFIDScanResponse'
+        "400":
+          description: code is required
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Process RFID scan
+      tags:
+      - rfid
+  /api/spools:
+    get:
+      parameters:
+      - description: Search query
+        in: query
+        name: q
+        type: string
+      - description: Filter by material type
+        in: query
+        name: material
+        type: string
+      - description: Filter by rack ID ('none' for unracked)
+        in: query
+        name: rack_id
+        type: string
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Per page
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Spool'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List spools
+      tags:
+      - spools
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Spool data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SpoolCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Spool'
+        "400":
+          description: id_filament is required
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a spool
+      tags:
+      - spools
+  /api/spools/{id}:
+    delete:
+      parameters:
+      - description: Spool ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete a spool
+      tags:
+      - spools
+    get:
+      parameters:
+      - description: Spool ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Spool'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get a spool
+      tags:
+      - spools
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Spool ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated fields
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SpoolUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Spool'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update a spool
+      tags:
+      - spools
+  /api/spools/{id}/rack:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Spool ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Rack ID (null to unassign)
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RackAssignRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Spool'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Assign or unassign a spool from a rack
+      tags:
+      - spools
+  /api/spools/{id}/weight:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Spool ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: New weight
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.WeightUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Spool'
+        "400":
+          description: weight must be > 0
+          schema:
+            type: string
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update remaining weight of a spool
+      tags:
+      - spools
+  /api/tags:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Tag'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List tags
+      tags:
+      - tags
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tag data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.TagRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Tag'
+        "400":
+          description: name is required
+          schema:
+            type: string
+        "409":
+          description: tag already exists
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a tag
+      tags:
+      - tags
+  /api/tags/{id}:
+    delete:
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete a tag
+      tags:
+      - tags
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Tag data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.TagRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Tag'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update a tag
+      tags:
+      - tags
+  /api/wishlist:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.WishlistItem'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List wishlist items
+      tags:
+      - wishlist
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Wishlist item
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.WishlistCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.WishlistItem'
+        "400":
+          description: id_filament is required
+          schema:
+            type: string
+        "409":
+          description: filament already in wishlist
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Add item to wishlist
+      tags:
+      - wishlist
+  /api/wishlist/{id}:
+    delete:
+      parameters:
+      - description: Wish ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Remove item from wishlist
+      tags:
+      - wishlist
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Wish ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated fields
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.WishlistUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.WishlistItem'
+        "404":
+          description: not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update a wishlist item
+      tags:
+      - wishlist
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer {token}" in the Authorization header
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

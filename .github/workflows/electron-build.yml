@@ -1,0 +1,138 @@
+name: Electron — Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "studio-client/**"
+      - ".github/workflows/electron-build.yml"
+
+jobs:
+  # ── macOS ──────────────────────────────────────────────────────────────────
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: electron/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: electron
+
+      - name: Import signing certificate
+        env:
+          MAC_CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
+          MAC_CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+        run: |
+          KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
+          echo "$MAC_CSC_LINK" | base64 --decode > $RUNNER_TEMP/cert.p12
+          security create-keychain -p "" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "" $KEYCHAIN_PATH
+          security import $RUNNER_TEMP/cert.p12 -k $KEYCHAIN_PATH -P "$MAC_CSC_KEY_PASSWORD" -T /usr/bin/codesign
+          security list-keychain -d user -s $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" $KEYCHAIN_PATH
+
+      - name: Vite build
+        run: npm run build
+        working-directory: electron
+
+      - name: Package (macOS — x64 + arm64)
+        env:
+          CSC_KEYCHAIN: ${{ runner.temp }}/build.keychain
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: npx electron-builder --mac --x64 --arm64
+        working-directory: electron
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-builds
+          path: |
+            electron/dist/*.dmg
+            electron/dist/*.zip
+          retention-days: 30
+
+  # ── Windows ────────────────────────────────────────────────────────────────
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: electron/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: electron
+
+      - name: Vite build
+        run: npm run build
+        working-directory: electron
+
+      - name: Package (Windows — x64)
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+        run: npx electron-builder --win --x64
+        working-directory: electron
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: win-builds
+          path: electron/dist/*.exe
+          retention-days: 30
+
+  # ── Linux ──────────────────────────────────────────────────────────────────
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: electron/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: electron
+
+      - name: Vite build
+        run: npm run build
+        working-directory: electron
+
+      - name: Package (Linux — x64)
+        run: npx electron-builder --linux --x64
+        working-directory: electron
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-builds
+          path: |
+            electron/dist/*.AppImage
+            electron/dist/*.deb
+          retention-days: 30

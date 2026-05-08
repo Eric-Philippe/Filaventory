@@ -1,0 +1,2856 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Filament inventory management for 3D printing enthusiasts.",
+        "title": "Filaventory API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/api/account": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "Get current user account",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "Update account details",
+                "parameters": [
+                    {
+                        "description": "Fields to update",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.AccountUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "409": {
+                        "description": "email or username already in use",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/account/password": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "Change password",
+                "parameters": [
+                    {
+                        "description": "Current and new password",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.PasswordUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "incorrect current password",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "Login credentials",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.AuthResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "invalid credentials",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "Registration details",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.AuthResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "validation error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "409": {
+                        "description": "email or username already exists",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brands": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "brands"
+                ],
+                "summary": "List brands",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "q",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Per page",
+                        "name": "per_page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/models.Brand"
+                                    }
+                                },
+                                "page": {
+                                    "type": "integer"
+                                },
+                                "per_page": {
+                                    "type": "integer"
+                                },
+                                "total": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "brands"
+                ],
+                "summary": "Create a brand",
+                "parameters": [
+                    {
+                        "description": "Brand data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.BrandRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Brand"
+                        }
+                    },
+                    "400": {
+                        "description": "name is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "409": {
+                        "description": "brand already exists",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brands/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "brands"
+                ],
+                "summary": "Get a brand",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Brand UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Brand"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "brands"
+                ],
+                "summary": "Update a brand",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Brand UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Brand data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.BrandRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Brand"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "brands"
+                ],
+                "summary": "Delete a brand",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Brand UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/filaments": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "filaments"
+                ],
+                "summary": "List filaments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Full-text search (brand, title, material)",
+                        "name": "q",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Filter by material types",
+                        "name": "materials",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by brand UUID",
+                        "name": "brand_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort field: title|brand|material|nozzle|bed|weight",
+                        "name": "sort_by",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort direction: asc|desc",
+                        "name": "sort_dir",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Per page",
+                        "name": "per_page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/models.Filament"
+                                    }
+                                },
+                                "page": {
+                                    "type": "integer"
+                                },
+                                "per_page": {
+                                    "type": "integer"
+                                },
+                                "total": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "filaments"
+                ],
+                "summary": "Create a filament",
+                "parameters": [
+                    {
+                        "description": "Filament data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.FilamentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Filament"
+                        }
+                    },
+                    "400": {
+                        "description": "validation error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/filaments/materials": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "filaments"
+                ],
+                "summary": "List distinct material types",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/filaments/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "filaments"
+                ],
+                "summary": "Get a filament",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filament UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Filament"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "filaments"
+                ],
+                "summary": "Update a filament",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filament UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Filament data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.FilamentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Filament"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "filaments"
+                ],
+                "summary": "Delete a filament",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filament UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "409": {
+                        "description": "filament is in use by a spool",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/health": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "system"
+                ],
+                "summary": "Health check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/preferences/{filament_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "preferences"
+                ],
+                "summary": "Get filament preference",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filament UUID",
+                        "name": "filament_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Preference"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "preferences"
+                ],
+                "summary": "Create or update filament preference",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filament UUID",
+                        "name": "filament_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Preference data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.PreferenceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Preference"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "preferences"
+                ],
+                "summary": "Delete filament preference",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filament UUID",
+                        "name": "filament_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/projects": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "List projects (print queue)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Project"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Create a project",
+                "parameters": [
+                    {
+                        "description": "Project data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ProjectCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Project"
+                        }
+                    },
+                    "400": {
+                        "description": "title is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/projects/reorder": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Reorder projects by priority",
+                "parameters": [
+                    {
+                        "description": "Ordered project IDs",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ReorderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/api/projects/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Get a project",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Project"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Update a project",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Project data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ProjectUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Project"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Delete a project",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/projects/{id}/filaments": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Link a spool or wishlist item to a project",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Spool or wish ID",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.LinkFilamentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id_link": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "id_spool or id_wish is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/projects/{id}/filaments/{link_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Remove a filament link from a project",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Link ID",
+                        "name": "link_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/racks": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "racks"
+                ],
+                "summary": "List racks",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Rack"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "racks"
+                ],
+                "summary": "Create a rack",
+                "parameters": [
+                    {
+                        "description": "Rack data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.RackRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Rack"
+                        }
+                    },
+                    "400": {
+                        "description": "name is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "409": {
+                        "description": "rack name already exists",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/racks/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "racks"
+                ],
+                "summary": "Get a rack",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Rack ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Rack"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "racks"
+                ],
+                "summary": "Update a rack",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Rack ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Rack data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.RackRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Rack"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "racks"
+                ],
+                "summary": "Delete a rack",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Rack ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/rfid/scan": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rfid"
+                ],
+                "summary": "Process RFID scan",
+                "parameters": [
+                    {
+                        "description": "Scan payload",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.RFIDScanRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.RFIDScanResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "code is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/spools": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "spools"
+                ],
+                "summary": "List spools",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "q",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by material type",
+                        "name": "material",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by rack ID ('none' for unracked)",
+                        "name": "rack_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Per page",
+                        "name": "per_page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Spool"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "spools"
+                ],
+                "summary": "Create a spool",
+                "parameters": [
+                    {
+                        "description": "Spool data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.SpoolCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Spool"
+                        }
+                    },
+                    "400": {
+                        "description": "id_filament is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/spools/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "spools"
+                ],
+                "summary": "Get a spool",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Spool ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Spool"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "spools"
+                ],
+                "summary": "Update a spool",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Spool ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated fields",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.SpoolUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Spool"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "spools"
+                ],
+                "summary": "Delete a spool",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Spool ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/spools/{id}/rack": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "spools"
+                ],
+                "summary": "Assign or unassign a spool from a rack",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Spool ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Rack ID (null to unassign)",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.RackAssignRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Spool"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/spools/{id}/weight": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "spools"
+                ],
+                "summary": "Update remaining weight of a spool",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Spool ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New weight",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.WeightUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Spool"
+                        }
+                    },
+                    "400": {
+                        "description": "weight must be \u003e 0",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tags": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tags"
+                ],
+                "summary": "List tags",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Tag"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Create a tag",
+                "parameters": [
+                    {
+                        "description": "Tag data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.TagRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Tag"
+                        }
+                    },
+                    "400": {
+                        "description": "name is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "409": {
+                        "description": "tag already exists",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tags/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Update a tag",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Tag ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Tag data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.TagRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Tag"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Delete a tag",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Tag ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/wishlist": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wishlist"
+                ],
+                "summary": "List wishlist items",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.WishlistItem"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wishlist"
+                ],
+                "summary": "Add item to wishlist",
+                "parameters": [
+                    {
+                        "description": "Wishlist item",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.WishlistCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.WishlistItem"
+                        }
+                    },
+                    "400": {
+                        "description": "id_filament is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "409": {
+                        "description": "filament already in wishlist",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/wishlist/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wishlist"
+                ],
+                "summary": "Update a wishlist item",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Wish ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated fields",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.WishlistUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.WishlistItem"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "wishlist"
+                ],
+                "summary": "Remove item from wishlist",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Wish ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.AccountUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string",
+                    "example": "EUR"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "alice@example.com"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "alice"
+                }
+            }
+        },
+        "handlers.AuthResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                },
+                "user": {}
+            }
+        },
+        "handlers.BrandRequest": {
+            "type": "object",
+            "properties": {
+                "empty_spool_weight_grams": {
+                    "type": "number",
+                    "example": 250
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Bambu Lab"
+                },
+                "website": {
+                    "type": "string",
+                    "example": "https://bambulab.com"
+                }
+            }
+        },
+        "handlers.FilamentRequest": {
+            "type": "object",
+            "properties": {
+                "bed_temp_max": {
+                    "type": "integer",
+                    "example": 65
+                },
+                "bed_temp_min": {
+                    "type": "integer",
+                    "example": 60
+                },
+                "color_hex": {
+                    "type": "string",
+                    "example": "#1a1a2e"
+                },
+                "density": {
+                    "type": "number",
+                    "example": 1.24
+                },
+                "dry_temp": {
+                    "type": "integer",
+                    "example": 50
+                },
+                "dry_time": {
+                    "type": "integer",
+                    "example": 6
+                },
+                "filled_type": {
+                    "type": "string",
+                    "example": "Silk"
+                },
+                "id_brand": {
+                    "type": "string",
+                    "example": "uuid-here"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "material_type": {
+                    "type": "string",
+                    "example": "PLA"
+                },
+                "nozzle_temp_max": {
+                    "type": "integer",
+                    "example": 220
+                },
+                "nozzle_temp_min": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Galaxy Black PLA"
+                },
+                "weight_grams": {
+                    "type": "integer",
+                    "example": 1000
+                }
+            }
+        },
+        "handlers.LinkFilamentRequest": {
+            "type": "object",
+            "properties": {
+                "id_spool": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "id_wish": {
+                    "type": "integer",
+                    "example": 7
+                }
+            }
+        },
+        "handlers.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "alice@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "s3cr3t!"
+                }
+            }
+        },
+        "handlers.PasswordUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "current_password": {
+                    "type": "string",
+                    "example": "old_pass"
+                },
+                "new_password": {
+                    "type": "string",
+                    "example": "new_pass"
+                }
+            }
+        },
+        "handlers.PreferenceRequest": {
+            "type": "object",
+            "properties": {
+                "bed_temp_override": {
+                    "type": "integer",
+                    "example": 60
+                },
+                "ironing_flow": {
+                    "type": "integer",
+                    "example": 15
+                },
+                "ironing_speed": {
+                    "type": "integer",
+                    "example": 30
+                },
+                "notes": {
+                    "type": "string",
+                    "example": "prints better at 220"
+                },
+                "nozzle_temp_override": {
+                    "type": "integer",
+                    "example": 215
+                }
+            }
+        },
+        "handlers.ProjectCreateRequest": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "model_url": {
+                    "type": "string",
+                    "example": "https://makerworld.com/..."
+                },
+                "priority": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "tag_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "target_person": {
+                    "type": "string",
+                    "example": "Bob"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Benchy"
+                }
+            }
+        },
+        "handlers.ProjectUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "model_url": {
+                    "type": "string",
+                    "example": "https://makerworld.com/..."
+                },
+                "priority": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "tag_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "target_person": {
+                    "type": "string",
+                    "example": "Bob"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Benchy"
+                }
+            }
+        },
+        "handlers.RFIDScanRequest": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "TAG-ABC123"
+                },
+                "origin": {
+                    "type": "string",
+                    "example": "tigertag"
+                }
+            }
+        },
+        "handlers.RFIDScanResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "origin": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.RackAssignRequest": {
+            "type": "object",
+            "properties": {
+                "id_rack": {
+                    "type": "integer",
+                    "example": 2
+                }
+            }
+        },
+        "handlers.RackRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Left side"
+                },
+                "max_capacity": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Top shelf"
+                }
+            }
+        },
+        "handlers.RegisterRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "alice@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "s3cr3t!"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "alice"
+                }
+            }
+        },
+        "handlers.ReorderRequest": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "handlers.SpoolCreateRequest": {
+            "type": "object",
+            "properties": {
+                "id_filament": {
+                    "type": "string",
+                    "example": "uuid-here"
+                },
+                "id_rack": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "is_dry": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "is_spooled": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "notes": {
+                    "type": "string",
+                    "example": "opened 2024-01"
+                },
+                "weight_remaining_grams": {
+                    "type": "number",
+                    "example": 850
+                }
+            }
+        },
+        "handlers.SpoolUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "id_rack": {
+                    "type": "integer"
+                },
+                "is_dry": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "is_spooled": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "weight_remaining_grams": {
+                    "type": "number",
+                    "example": 650
+                }
+            }
+        },
+        "handlers.TagRequest": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string",
+                    "example": "#FF5733"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Urgent"
+                }
+            }
+        },
+        "handlers.WeightUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "weight_remaining_grams": {
+                    "type": "number",
+                    "example": 520
+                }
+            }
+        },
+        "handlers.WishlistCreateRequest": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string",
+                    "example": "wait for sale"
+                },
+                "desired_price": {
+                    "type": "number",
+                    "example": 24.99
+                },
+                "id_filament": {
+                    "type": "string",
+                    "example": "uuid-here"
+                },
+                "priority": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "purchase_url": {
+                    "type": "string",
+                    "example": "https://store.com/item"
+                },
+                "quantity_spools": {
+                    "type": "number",
+                    "example": 2
+                }
+            }
+        },
+        "handlers.WishlistUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "desired_price": {
+                    "type": "number"
+                },
+                "priority": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "purchase_url": {
+                    "type": "string"
+                },
+                "quantity_spools": {
+                    "type": "number",
+                    "example": 1
+                }
+            }
+        },
+        "models.Brand": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "empty_spool_weight_grams": {
+                    "type": "number"
+                },
+                "id_brand": {
+                    "type": "string"
+                },
+                "id_origin": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "website": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Filament": {
+            "type": "object",
+            "properties": {
+                "bed_temp_max": {
+                    "type": "integer"
+                },
+                "bed_temp_min": {
+                    "type": "integer"
+                },
+                "brand": {
+                    "$ref": "#/definitions/models.Brand"
+                },
+                "color_hex": {
+                    "type": "string"
+                },
+                "color_info": {
+                    "type": "object"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "density": {
+                    "type": "number"
+                },
+                "dry_temp": {
+                    "type": "integer"
+                },
+                "dry_time": {
+                    "type": "integer"
+                },
+                "filled_type": {
+                    "type": "string"
+                },
+                "id_brand": {
+                    "type": "string"
+                },
+                "id_filament": {
+                    "type": "string"
+                },
+                "id_origin": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "material_type": {
+                    "type": "string"
+                },
+                "nozzle_temp_max": {
+                    "type": "integer"
+                },
+                "nozzle_temp_min": {
+                    "type": "integer"
+                },
+                "product_id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "weight_grams": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Preference": {
+            "type": "object",
+            "properties": {
+                "bed_temp_override": {
+                    "type": "integer"
+                },
+                "id_filament": {
+                    "type": "string"
+                },
+                "id_user": {
+                    "type": "string"
+                },
+                "ironing_flow": {
+                    "type": "integer"
+                },
+                "ironing_speed": {
+                    "type": "integer"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "nozzle_temp_override": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Project": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "filaments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProjectFilamentLink"
+                    }
+                },
+                "id_project": {
+                    "type": "integer"
+                },
+                "id_user": {
+                    "type": "string"
+                },
+                "model_url": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Tag"
+                    }
+                },
+                "target_person": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProjectFilamentLink": {
+            "type": "object",
+            "properties": {
+                "id_link": {
+                    "type": "integer"
+                },
+                "id_project": {
+                    "type": "integer"
+                },
+                "id_spool": {
+                    "type": "integer"
+                },
+                "id_wish": {
+                    "type": "integer"
+                },
+                "spool": {
+                    "$ref": "#/definitions/models.Spool"
+                },
+                "wish": {
+                    "$ref": "#/definitions/models.WishlistItem"
+                }
+            }
+        },
+        "models.Rack": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id_rack": {
+                    "type": "integer"
+                },
+                "id_user": {
+                    "type": "string"
+                },
+                "max_capacity": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "spool_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.RackRef": {
+            "type": "object",
+            "properties": {
+                "id_rack": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Spool": {
+            "type": "object",
+            "properties": {
+                "acquired_at": {
+                    "type": "string"
+                },
+                "filament": {
+                    "$ref": "#/definitions/models.Filament"
+                },
+                "id_filament": {
+                    "type": "string"
+                },
+                "id_rack": {
+                    "type": "integer"
+                },
+                "id_spool": {
+                    "type": "integer"
+                },
+                "id_user": {
+                    "type": "string"
+                },
+                "is_dry": {
+                    "type": "boolean"
+                },
+                "is_spooled": {
+                    "type": "boolean"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "rack": {
+                    "$ref": "#/definitions/models.RackRef"
+                },
+                "weight_remaining_grams": {
+                    "type": "number"
+                }
+            }
+        },
+        "models.Tag": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "id_tag": {
+                    "type": "integer"
+                },
+                "id_user": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id_user": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.WishlistItem": {
+            "type": "object",
+            "properties": {
+                "added_at": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "desired_price": {
+                    "type": "number"
+                },
+                "filament": {
+                    "$ref": "#/definitions/models.Filament"
+                },
+                "id_filament": {
+                    "type": "string"
+                },
+                "id_user": {
+                    "type": "string"
+                },
+                "id_wish": {
+                    "type": "integer"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "purchase_url": {
+                    "type": "string"
+                },
+                "quantity_spools": {
+                    "type": "number"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Type \"Bearer {token}\" in the Authorization header",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
