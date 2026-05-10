@@ -28,11 +28,13 @@ type registerRequest struct {
 	Email    string `json:"email"`
 	Username string `json:"username"`
 	Password string `json:"password"`
+	Extended bool   `json:"extended"`
 }
 
 type loginRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Extended bool   `json:"extended"`
 }
 
 type authResponse struct {
@@ -86,7 +88,11 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := generateJWT(user.IDUser, h.cfg.JWTSecret)
+	ttl := 24 * time.Hour
+	if req.Extended {
+		ttl = 30 * 24 * time.Hour
+	}
+	token, err := generateJWT(user.IDUser, h.cfg.JWTSecret, ttl)
 	if err != nil {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
@@ -130,7 +136,11 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := generateJWT(user.IDUser, h.cfg.JWTSecret)
+	ttl := 24 * time.Hour
+	if req.Extended {
+		ttl = 30 * 24 * time.Hour
+	}
+	token, err := generateJWT(user.IDUser, h.cfg.JWTSecret, ttl)
 	if err != nil {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
@@ -140,10 +150,10 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(authResponse{Token: token, User: user})
 }
 
-func generateJWT(userID, secret string) (string, error) {
+func generateJWT(userID, secret string, ttl time.Duration) (string, error) {
 	claims := jwt.MapClaims{
 		"sub": userID,
-		"exp": time.Now().Add(24 * time.Hour).Unix(),
+		"exp": time.Now().Add(ttl).Unix(),
 		"iat": time.Now().Unix(),
 	}
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(secret))

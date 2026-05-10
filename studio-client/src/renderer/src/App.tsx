@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -20,6 +21,15 @@ function ServerRoute({
   return serverUrl ? <>{children}</> : <Navigate to="/setup" replace />;
 }
 
+function isTokenExpired(token: string): boolean {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.exp < Date.now() / 1000;
+  } catch {
+    return true;
+  }
+}
+
 function PrivateRoute({
   children,
 }: {
@@ -28,10 +38,23 @@ function PrivateRoute({
   const serverUrl = localStorage.getItem("serverUrl");
   if (!serverUrl) return <Navigate to="/setup" replace />;
   const token = localStorage.getItem("token");
-  return token ? <>{children}</> : <Navigate to="/login" replace />;
+  if (!token || isTokenExpired(token)) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
 }
 
 export default function App(): React.ReactElement {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handler = (): void => navigate("/login", { replace: true });
+    window.addEventListener("auth:expired", handler);
+    return () => window.removeEventListener("auth:expired", handler);
+  }, [navigate]);
+
   return (
     <Routes>
       <Route path="/setup" element={<ServerSetup />} />

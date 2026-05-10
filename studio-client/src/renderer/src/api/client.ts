@@ -162,6 +162,11 @@ async function req<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   const res = await fetch(`${getApiBase()}${path}`, { ...options, headers });
   if (!res.ok) {
+    if (res.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.dispatchEvent(new Event("auth:expired"));
+    }
     const msg = (await res.text()).trim() || res.statusText;
     throw Object.assign(new Error(msg), { status: res.status });
   }
@@ -222,12 +227,12 @@ export const api = {
     login: (email: string, password: string) =>
       reqSafe<{ token: string; user: User }>("/api/auth/login", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, extended: true }),
       }),
     register: (email: string, username: string, password: string) =>
       reqSafe<{ token: string; user: User }>("/api/auth/register", {
         method: "POST",
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({ email, username, password, extended: true }),
       }),
   },
 
